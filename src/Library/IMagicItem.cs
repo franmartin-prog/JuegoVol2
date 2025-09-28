@@ -1,6 +1,6 @@
 ﻿namespace Library;
 
-public interface IMagicItem : iitem
+public interface IMagicItem : IItems
 {
     int MagicCost { get; }
 }
