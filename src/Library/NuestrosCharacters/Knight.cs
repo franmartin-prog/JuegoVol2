@@ -1,6 +1,6 @@
 namespace Library.NuestrosCharacters;
 
-public class Knight : ICharacter<IItems>
+public class Knightt : ICharacter<IItems>
 {
     public string Name { get; }
     public int MaxLife { get; }
@@ -8,7 +8,7 @@ public class Knight : ICharacter<IItems>
     public int InitialDefense { get; }
     public int Life { get; set; }
 
-    public Knight(string name, int maxLife, int initialAttack, int initialDefense)
+    public Knightt(string name, int maxLife, int initialAttack, int initialDefense)
     {
         Name = name;
         MaxLife = maxLife;

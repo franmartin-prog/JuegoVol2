@@ -1,60 +1,75 @@
+using Library;
+
 namespace Ucu.Poo.RoleplayGame;
 
-public class Dwarf
+public class Dwarf : ICharacter<IItems>
 {
-    private int health = 100;
+    public string Name { get; }
+    public int MaxLife { get; }
+    public int InitialAttack { get; }
+    public int InitialDefense { get; }
+    public int Life { get; set; }
 
-    public Dwarf(string name)
+    public Dwarf(string name, int maxLife, int initialAttack, int initialDefense)
     {
-        this.Name = name;
+        Name = name;
+        MaxLife = maxLife;
+        InitialAttack = initialAttack;
+        InitialDefense = initialDefense;
+        Life = maxLife;
     }
 
-    public string Name { get; set; }
+    private List<IItems> DwarfItem = new List<IItems>();
 
-    public Axe Axe { get; set; }
-
-    public Shield Shield { get; set; }
-
-    public Helmet Helmet { get; set; }
-
-    public int AttackValue
+    public void AddItem(IItems item)
     {
-        get
-        {
-            return Axe.AttackValue;
-        }
+        DwarfItem.Add(item);
     }
 
-    public int DefenseValue
+    public List<IItems> RemoveItem()
     {
-        get
-        {
-            return Shield.DefenseValue + Helmet.DefenseValue;
-        }
+        throw new NotImplementedException();
     }
 
-    public int Health
+    public int GetAttack()
     {
-        get
+        int attack = InitialAttack;
+        foreach (var item in DwarfItem)
         {
-            return this.health;
+            attack += item.Attack; //???
         }
-        private set
-        {
-            this.health = value < 0 ? 0 : value;
-        }
+
+        return attack;;
     }
 
-    public void ReceiveAttack(int power)
+    public int GetDefense()
     {
-        if (this.DefenseValue < power)
+        int defense = InitialDefense;
+        foreach (var item in DwarfItem)
         {
-            this.Health -= power - this.DefenseValue;
+            defense += item.Defense; //??
         }
+
+        return defense;
     }
 
-    public void Cure()
+    public int Heal()
     {
-        this.Health = 100;
+        foreach (var item in DwarfItem)
+        {
+            Life += item.Healing;
+        }
+        // Tope por si se pasa de la vida máxima
+        if (Life > MaxLife)
+        {
+            Life = MaxLife;
+        }
+
+        return Life;
+    }
+
+    public int ReceiveAttack(ICharacter<IItems> character)
+    {
+        return Life = Life + GetDefense() - character.GetAttack();
     }
 }

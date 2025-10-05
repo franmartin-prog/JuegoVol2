@@ -20,8 +20,7 @@ public class Wizardd : IMagicCharacter
     }
 
     private List<IItems> WizardItems = new List<IItems>();
-    private WizarddSpells []
-    
+    private List<ISpells> WizarddSpells = new List<ISpells>();
     public void AddItem(IItems item)
     {
         WizardItems.Add(item);
