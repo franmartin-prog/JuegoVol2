@@ -34,7 +34,7 @@ public class Knight : ICharacter<IItems>
         int attack = InitialAttack;
         foreach (var item in KnightItems)
         {
-            attack += item.Attack; //???
+            attack += item.AttackValue; //???
         }
 
         return attack;;
@@ -45,7 +45,7 @@ public class Knight : ICharacter<IItems>
         int defense = InitialDefense;
         foreach (var item in KnightItems)
         {
-            defense += item.Defense; //??
+            defense += item.DefenseValue; //??
         }
 
         return defense;

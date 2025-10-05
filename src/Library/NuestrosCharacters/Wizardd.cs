@@ -20,7 +20,7 @@ public class Wizardd : IMagicCharacter
     }
 
     private List<IItems> WizardItems = new List<IItems>();
-    private WizarddSpells []
+    private WizarddSpells[];
     
     public void AddItem(IItems item)
     {
@@ -37,7 +37,7 @@ public class Wizardd : IMagicCharacter
         int attack = InitialAttack;
         foreach (var item in WizardItems)
         {
-            attack += item.Attack; //???
+            attack += item.AttackValue; //???
         }
 
         return attack;
@@ -48,7 +48,7 @@ public class Wizardd : IMagicCharacter
         int defense = InitialDefense;
         foreach (var item in WizardItems)
         {
-            defense += item.Defense; //??
+            defense += item.DefenseValue; //??
         }
 
         return defense;

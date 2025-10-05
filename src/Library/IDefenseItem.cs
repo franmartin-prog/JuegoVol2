@@ -1,6 +1,6 @@
 ﻿namespace Library;
 
-public interface IDefenseItem
+public interface IDefenseItem : IItems
 {
-    int Defense { get; }
+    int DefenseValue { get; }
 }

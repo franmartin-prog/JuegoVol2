@@ -1,7 +1,10 @@
+using Library;
+
 namespace Ucu.Poo.RoleplayGame;
 
-public class Bow
+public class Bow : IAttackItem
 {
+    public string Name { get; }
     public int AttackValue 
     {
         get
