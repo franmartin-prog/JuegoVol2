@@ -1,6 +1,8 @@
+using Library;
+
 namespace Ucu.Poo.RoleplayGame;
 
-public class SpellsBook
+public class SpellsBook : IItems
 {
     public Spell[] Spells { get; set; }
     
@@ -29,4 +31,6 @@ public class SpellsBook
             return value;
         }
     }
+
+    public string Name { get; }
 }

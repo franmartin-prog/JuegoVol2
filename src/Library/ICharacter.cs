@@ -6,6 +6,7 @@ public interface ICharacter<T> where T : IItems
     int MaxLife { get;  }
     int InitialAttack { get;  }
     int InitialDefense { get;  }
+    int Life { get; set; }
 
     void AddItem(T item);
     List<T> RemoveItem();
@@ -14,4 +15,5 @@ public interface ICharacter<T> where T : IItems
     int GetDefense();
     int Heal();
     int ReceiveAttack(ICharacter<T> character);
+    
 }
