@@ -12,4 +12,9 @@ public class Armor : IDefenseItem
             return 25;
         }
     }
+
+    public Armor(string name)
+    {
+        Name = name;
+    }
 }

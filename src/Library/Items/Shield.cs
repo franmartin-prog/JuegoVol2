@@ -12,4 +12,9 @@ public class Shield : IDefenseItem
             return 14;
         }
     }
+
+    public Shield(string name)
+    {
+        Name = name;
+    }
 }

@@ -20,4 +20,9 @@ public class Staff : IDefenseItem, IAttackItem
             return 100;
         }
     }
+
+    public Staff(string name)
+    {
+        Name = name;
+    }
 }

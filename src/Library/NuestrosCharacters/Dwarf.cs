@@ -1,22 +1,23 @@
-namespace Library.NuestrosCharacters;
+using Library;
 
-public class Wizardd : IMagicCharacter
+namespace Ucu.Poo.RoleplayGame;
+
+public class Dwarf : ICharacter<IItems> 
 {
     public string Name { get; }
     public int MaxLife { get; }
     public int InitialAttack { get; }
     public int InitialDefense { get; }
     public int Life { get; set; }
+    
 
-    public Wizardd(string name, int maxLife, int initialAttack, int initialDefense, int maxMagic)
+    public Dwarf(string name, int maxLife, int initialAttack, int initialDefense)
     {
         Name = name;
         MaxLife = maxLife;
         InitialAttack = initialAttack;
         InitialDefense = initialDefense;
         Life = maxLife;
-        MaxMagic = maxMagic;
-        Magic = MaxMagic;
     }
 
     //ATAQUE
@@ -104,8 +105,4 @@ public class Wizardd : IMagicCharacter
     {
         return Life = Life + GetDefense() - character.GetAttack();
     }
-
-    public int MaxMagic { get; }
-    public int Magic { get; set; }
-    
 }

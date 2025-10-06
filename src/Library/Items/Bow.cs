@@ -12,4 +12,9 @@ public class Bow : IAttackItem
             return 15;
         } 
     }
+
+    public Bow(string name)
+    {
+        Name = name;
+    }
 }

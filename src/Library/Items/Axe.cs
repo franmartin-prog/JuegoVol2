@@ -12,4 +12,9 @@ public class Axe : IAttackItem
             return 25;
         } 
     }
+
+    public Axe(string name)
+    {
+        Name = name;
+    }
 }

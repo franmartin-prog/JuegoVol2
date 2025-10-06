@@ -12,4 +12,9 @@ public class Helmet : IDefenseItem
             return 18;
         }
     }
+
+    public Helmet(string name)
+    {
+        Name = name;
+    }
 }

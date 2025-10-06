@@ -12,4 +12,9 @@ public class Sword : IAttackItem, IItems
             return 20;
         } 
     }
+
+    public Sword(string name)
+    {
+        Name = name;
+    }
 }

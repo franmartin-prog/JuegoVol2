@@ -9,7 +9,8 @@ public interface ICharacter<T> where T : IItems
     int Life { get; set; }
 
     void AddItem(T item);
-    List<T> RemoveItem();
+
+    List<T> RemoveItem(T item);
 
     int GetAttack();
     int GetDefense();

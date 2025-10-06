@@ -1,28 +1,3 @@
-namespace Library.NuestrosCharacters;
-
-public class Knight : ICharacter<IItems>
-{
-    public string Name { get; }
-    public int MaxLife { get; }
-    public int InitialAttack { get; }
-    public int InitialDefense { get; }
-    public int Life { get; set; }
-
-    public Knight(string name, int maxLife, int initialAttack, int initialDefense)
-    {
-        Name = name;
-        MaxLife = maxLife;
-        InitialAttack = initialAttack;
-        InitialDefense = initialDefense;
-        Life = maxLife;
-    }
-
-    private List<IItems> KnightItems = new List<IItems>();
-
-    public void AddItem(IItems item)
-    {
-        KnightItems.Add(item);
-    }
 
     public List<IItems> RemoveItem()
     {
