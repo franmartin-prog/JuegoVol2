@@ -5,19 +5,25 @@ namespace Ucu.Poo.RoleplayGame;
 public class Dwarf : ICharacter<IItems> 
 {
     public string Name { get; }
-    public int MaxLife { get; }
-    public int InitialAttack { get; }
-    public int InitialDefense { get; }
+    public int MaxLife
+    {
+        get { return 120; }
+    }
+    public int InitialAttack
+    {
+        get { return 40; }
+    }
+    public int InitialDefense
+    {
+        get { return 75; }
+    }
     public int Life { get; set; }
     
 
-    public Dwarf(string name, int maxLife, int initialAttack, int initialDefense)
+    public Dwarf(string name)
     {
         Name = name;
-        MaxLife = maxLife;
-        InitialAttack = initialAttack;
-        InitialDefense = initialDefense;
-        Life = maxLife;
+        Life = MaxLife;
     }
 
     //ATAQUE

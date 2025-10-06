@@ -1,20 +1,26 @@
 namespace Library.NuestrosCharacters;
 
-public class Knightt : ICharacter<IItems> 
+public class Knight : ICharacter<IItems> 
 {
     public string Name { get; }
-    public int MaxLife { get; }
-    public int InitialAttack { get; }
-    public int InitialDefense { get; }
+    public int MaxLife
+    {
+        get { return 160; }
+    }
+    public int InitialAttack
+    {
+        get { return 30; }
+    }
+    public int InitialDefense
+    {
+        get { return 80; }
+    } 
     public int Life { get; set; }
 
-    public Knightt(string name, int maxLife, int initialAttack, int initialDefense)
+    public Knight(string name)
     {
         Name = name;
-        MaxLife = maxLife;
-        InitialAttack = initialAttack;
-        InitialDefense = initialDefense;
-        Life = maxLife;
+        Life = MaxLife;
     }
 
     //ATAQUE
