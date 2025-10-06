@@ -24,7 +24,7 @@ public class Knight : ICharacter<IItems>
     }
 
     //ATAQUE
-    private List<IAttackItem> AttackItems = new List<IAttackItem>();
+    public List<IAttackItem> AttackItems = new List<IAttackItem>();
     public int GetAttack()
     { 
         int attack = InitialAttack;

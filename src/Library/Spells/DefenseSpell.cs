@@ -6,16 +6,13 @@ public class DefenseSpell : ISpells
 {
     public string Name { get; }
     public int Cost { get; }
+    public int Defense { get; }
 
-    public DefenseSpell(string name, int cost, int attackValue, int defenseValue)
+    public DefenseSpell(string name, int cost, int defense)
     {
         Name = name;
         Cost = cost;
-        DefenseValue = defenseValue;
-        AttackValue = attackValue;
+        Defense = defense;
     }
-    public int AttackValue { get; }
-
-    public int DefenseValue { get; }
 }
 

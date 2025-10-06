@@ -32,7 +32,7 @@ public class Wizard : IMagicCharacter
 }
 
     //ATAQUE
-    private List<IAttackItem> AttackItems = new List<IAttackItem>();
+    public List<IAttackItem> AttackItems = new List<IAttackItem>();
     private List<ISpells> spells = new List<ISpells>();
 
     public void ReadGrimoire()
@@ -55,7 +55,7 @@ public class Wizard : IMagicCharacter
         }
     }
 
-    private int GetAttackCost()
+    public int GetAttackCost()
     {
         int cost = 0;
         foreach (IAttackSpell attack in spells)

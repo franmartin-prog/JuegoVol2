@@ -211,7 +211,7 @@ namespace LibraryTests
         {
             var k = new Knight("Arturo");
             k.Life = 0;
-            Item potion = new Item("potion", 0, 0, 100);
+            Vandage potion = new Vandage("potion");
             k.AddItem(potion);
 
             k.Heal();
@@ -223,17 +223,17 @@ namespace LibraryTests
         {
             var k = new Knight("Arturo");
 
-            Item sword = new Item("Sword", 10, 0, 0);
+            Sword sword = new Sword("Sword");
             k.AddItem(sword);
             k.Life = 0;
             k.RemoveItem(sword);
-            Assert.IsNotEmpty(k.Items);
+            Assert.IsNotEmpty(k.AttackItems);
 
             k.Life = 100;
             k.RemoveItem(sword);
             k.Life = 0;
             k.AddItem(sword);
-            Assert.IsEmpty(k.Items);
+            Assert.IsEmpty(k.AttackItems);
 
             // Forzamos una lista con 1 item y probamos Remove en muerto
 
@@ -244,13 +244,15 @@ namespace LibraryTests
         public void ReceiveAttack_AumentaDefensaPorEfectoLateral_ExponeBug()
         {
             var k = new Knight("Arturo");
-            Item shield = new Item("shield", 0, 20, 0);
+            Shield shield = new Shield("shield");
             k.AddItem(shield);
 
             // Primera vez que recibe ataque, internamente llama a GetDefense(),
             // que ACUMULA _defense (+30 por el escudo).
             var dAntes = k.GetDefense(); // ahora _defense ya se incrementó a 110
-            var vida1 = k.ReceiveAttack(100); // vuelve a llamar GetDefense -> sube a 140
+            Elf elf2 = new Elf("elf 2");
+
+            var vida1 = k.ReceiveAttack(elf2); // vuelve a llamar GetDefense -> sube a 140
             var dDespues = k.GetDefense(); // vuelve a subir a 170
 
             // La defensa no va aumentando con cada consulta/ataque. Esto favorece al caballero “para siempre”.
@@ -261,119 +263,83 @@ namespace LibraryTests
 
         public static class SpellTests
         {
-            private static Spell S(string name, int atk, int def, int heal) => new Spell(name, atk, def, heal);
+            private static AttackSpell S(string name, int atk, int cost) => new AttackSpell(name, cost, atk);
 
             [Test]
             public static void Constructor_Asigna_Propiedades()
             {
-                var s = S("Fuego", 25, 5, 0);
+                var s = S("Fuego", 25,20 );
                 Assert.That(s.Name, Is.EqualTo("Fuego"));
                 Assert.That(s.Attack, Is.EqualTo(25));
-                Assert.That(s.Defense, Is.EqualTo(5));
-                Assert.That(s.Healing, Is.EqualTo(0));
+                Assert.That(s.Cost,Is.EqualTo(20));
             }
 
             [Test]
             public static void Constructor_Acepta_Valores_NoPositivos()
             {
-                var s1 = S("Golpe", 0, 0, 0);
+                var s1 = S("Golpe", 0, 0);
                 Assert.That(s1.Attack, Is.EqualTo(0));
-                Assert.That(s1.Defense, Is.EqualTo(0));
-                Assert.That(s1.Healing, Is.EqualTo(0));
 
-                var s2 = S("Sangrado", -10, 0, 0);
+                var s2 = S("Sangrado", -10, 0);
                 Assert.That(s2.Attack, Is.EqualTo(-10));
-
-                var s3 = S("Maldición", 0, -20, 0);
-                Assert.That(s3.Defense, Is.EqualTo(-20));
-
-                var s4 = S("Drén", 0, 0, -5);
-                Assert.That(s4.Healing, Is.EqualTo(-5));
-            }
-
-            [Test]
-            public static void Constructor_Soporta_IntMax()
-            {
-                var s = S("Ultra", int.MaxValue, 0, 0);
-                Assert.That(s.Attack, Is.EqualTo(int.MaxValue));
-
-                var s2 = S("Ultra", 0, int.MaxValue, 0);
-                Assert.That(s2.Defense, Is.EqualTo(int.MaxValue));
-
-                var s3 = S("Ultra", 0, 0, int.MaxValue);
-                Assert.That(s3.Healing, Is.EqualTo(int.MaxValue));
             }
 
             [Test]
             public static void Propiedades_SoloGet_Inmutables()
             {
-                var s = S("Hielo", 10, 20, 30);
+                var s = S("Hielo", 10, 20);
                 var copia = s;
                 Assert.IsTrue(object.ReferenceEquals(s, copia), "La referencia debe ser la misma.");
 
-                var otro = S("Hielo", 10, 20, 30);
+                var otro = S("Hielo", 10, 20);
                 Assert.IsTrue(!object.ReferenceEquals(s, otro), "Instancias distintas aunque con mismos valores.");
             }
 
             [Test]
             public static void Name_PuedeSerNull_ComportamientoActual()
             {
-                var s = new Spell(null, 1, 2, 3);
+                var s = new DefenseSpell(null, 20, 20);
                 Assert.IsTrue(s.Name == null);
             }
-        }
-
-        [Test]
-        public static void AddSpell_AgregaSoloUno_ExponeDiseno()
-        {
-            Spell Fuego = new Spell("Fuego", 10, 0, 0);
-            Grimoire.SetSpells(Fuego);
-            Spell Hielo = new Spell("Hielo", 20, 0, 0);
-            Grimoire.SetSpells(Hielo);
-            Grimoire.AddSpell(); // por el flag sólo agrega el primero desconocido
-
-            var atk = Grimoire.GetAttack();
-            Assert.AreEqual(10, atk); // Si esperabas 30, esto expone el comportamiento real
         }
 
         [Test]
         public static void AddSpell_DosVeces_AgregaSegundo()
         {
 
-            var f = new Spell("Fuego", 10, 0, 0);
-            var h = new Spell("Hielo", 20, 0, 0);
-            Grimoire.SetSpells(f);
-            Grimoire.SetSpells(h);
-            Grimoire.ResetGrimoire();
-            Grimoire.AddSpell(); // agrega Fuego
+            var f = new AttackSpell("Fuego", 10, 0);
+            var h = new AttackSpell("Hielo", 20, 0);
+            SpellsBook.AddSpell(f);
+            SpellsBook.AddSpell(h);
+            SpellsBook.AddSpell(f); // agrega Fuego
 
-            Assert.That(Grimoire.GetAttack(), Is.EqualTo(10));
+            SpellsBook.AddSpell(); // ahora agrega Hielo
+            Wizard mago = new Wizard("mago");
+            mago.ReadGrimoire();
+            mago.ReadGrimoire();
+            
+            
 
-            Grimoire.AddSpell(); // ahora agrega Hielo
-
-            Assert.That(Grimoire.GetAttack(), Is.EqualTo(30));
+            Assert.That(mago.GetAttack(), Is.EqualTo(80));
 
         }
 
         [Test]
         public static void GetAttack_AcumulaEntreLlamadas_ExponeBug()
         {
-            Grimoire.ResetGrimoire();
-            Spell Fuego = new Spell("Fuego", 10, 0, 0);
-            Grimoire.SetSpells(Fuego);
-            Grimoire.AddSpell();
+            AttackSpell Fuego = new AttackSpell("Fuego", 10, 0);
+            SpellsBook.AddSpell(Fuego);
+            SpellsBook.AddSpell();
+            Wizard mago = new Wizard("mago");
+            var a1 = mago.GetAttackCost();
 
-            var a1 = Grimoire.GetAttack(); // 10
-            var a2 = Grimoire.GetAttack(); // (no suma otra vez lo mismo)
 
             Assert.That(a1, Is.EqualTo(10));
-            Assert.That(a2, Is.EqualTo(a1));
         }
 
         [Test]
         public static void GetDefense_GetHealing_Acumulacion_ExponeBug()
         {
-            Grimoire.ResetGrimoire();
             Spell Roca = new Spell("Roca", 0, 7, 3);
             Grimoire.SetSpells(Roca);
             Grimoire.AddSpell();
@@ -389,23 +355,6 @@ namespace LibraryTests
             Assert.That(h2, Is.EqualTo(h1));
         }
 
-        [Test]
-        public static void Contains_ReferenciaNoValor()
-        {
-
-            Grimoire.ResetGrimoire();
-            var a1 = new Spell("Clon", 5, 0, 0);
-            var a2 = new Spell("Clon", 5, 0, 0); // valores iguales, otra instancia
-
-            Grimoire.SetSpells(a1);
-            Grimoire.SetSpells(a2);
-            Grimoire.ResetGrimoire();
-            Grimoire.AddSpell(); // agrega a1
-            Grimoire.AddSpell(); // agrega a2 (Contains por referencia → distinto)
-
-            var atk = Grimoire.GetAttack();
-            Assert.AreEqual(10, atk); // 5 + 5
-        }
     }
 
     public class WizardTests2
@@ -417,20 +366,20 @@ namespace LibraryTests
             Assert.AreEqual("Gandalf", wiz.Name);
             Assert.AreEqual(50, wiz.Life); // MaxLife
             Assert.AreEqual(100, wiz.Magic); // MaxMagic
-            Assert.AreEqual(0, wiz.Items.Count);
+            Assert.AreEqual(0, wiz.AttackItems.Count);
         }
 
         [Test]
         public void AddItem_Y_RemoveItem_ModificanColeccion()
         {
             var wiz = new Wizard("Merlin");
-            var item = new Item("Daga", 5, 0, 0);
+            var item = new Staff ("Daga");
 
             wiz.AddItem(item);
-            Assert.AreEqual(1, wiz.Items.Count);
+            Assert.AreEqual(1, wiz.AttackItems.Count);
 
             wiz.RemoveItem(item);
-            Assert.AreEqual(0, wiz.Items.Count);
+            Assert.AreEqual(0, wiz.AttackItems.Count);
         }
 
         [Test]
@@ -441,12 +390,12 @@ namespace LibraryTests
             wiz.Magic = 0;
 
             // Attack base = 50 (en la clase)
-            wiz.AddItem(new Item("Daga", 5, 0, 0));
-            wiz.AddItem(new Item("Anillo", 3, 0, 0));
+            wiz.AddItem(new Bow("Daga"));
+            wiz.AddItem(new Sword("Anillo"));
 
             var atk = wiz.GetAttack();
-            // 50 + 5 + 3 = 58 (sin grimorio, porque Magic=0)
-            Assert.AreEqual(58, atk);
+            // 50 + 15 + 20= 85 (sin grimorio, porque Magic=0)
+            Assert.AreEqual(85, atk);
             // Y Magic sigue en 0
             Assert.AreEqual(0, wiz.Magic);
         }
@@ -458,12 +407,12 @@ namespace LibraryTests
             wiz.Magic = 0;
 
             // Defense base = 5
-            wiz.AddItem(new Item("Escudo", 0, 7, 0));
-            wiz.AddItem(new Item("Capa", 0, 2, 0));
+            wiz.AddItem(new Armor("Escudo"));
+            wiz.AddItem(new Shield("Capa"));
 
             var def = wiz.GetDefense();
-            // 5 + 7 + 2 = 14
-            Assert.AreEqual(14, def);
+            // 5 + 25 + 15 = 45
+            Assert.AreEqual(45, def);
             Assert.AreEqual(0, wiz.Magic);
         }
 
