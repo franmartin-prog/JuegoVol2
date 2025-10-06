@@ -9,4 +9,9 @@ public class Vandage : IHealingItem
     {
         return 20;
     }}
+
+    public Vandage(string name)
+    {
+        Name = name;
+    }
 }

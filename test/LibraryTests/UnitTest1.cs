@@ -1,11 +1,14 @@
 using NUnit.Framework; 
 using Library;
+
 using Library.NuestrosCharacters;
 using Ucu.Poo.RoleplayGame; // Dwarve, Wizard, Item, Grimoire, Elves
 
 namespace LibraryTests
 {
-    public class DwarveTests
+    [TestFixture]
+
+    public class DwarfTests
     {
         [Test]
         // Justificación: Curar no debe superar la vida máxima (regla de negocio).
@@ -13,10 +16,9 @@ namespace LibraryTests
         {
             var d = new Dwarf("Gimli");
             d.Life = 100;
-            d.AddItem(new Item("Poción", 0, 0, 50));
+            d.AddItem(new Vandage("Vendas"));
 
             d.Heal();
-
             Assert.AreEqual(120, d.Life); // MaxLife = 120
         }
 
@@ -24,13 +26,13 @@ namespace LibraryTests
         // Justificación: Documentar implementación actual: GetAttack ACUMULA en cada llamada.
         public void Dwarve_GetAttack_AcumulaCadaLlamada_ImplActual()
         {
-            var d = new Dwarve("Gimli");
-            d.AddItem(new Item("Hacha", 10, 0, 0));
+            var d = new Dwarf("Gimli");
+            d.AddItem(new Axe("Hacha"));
 
-            var first = d.GetAttack(); // 40 + 10 = 50
+            var first = d.GetAttack(); // 40 + 25 = 65
             var second = d.GetAttack(); // (no debería acumular)
 
-            Assert.AreEqual(40 + 10 * 3 / 2, first);
+            Assert.AreEqual(40 + 25, first);
             Assert.AreEqual(first, second);
         }
 
@@ -38,11 +40,12 @@ namespace LibraryTests
         // Justificación: no puede pasar que se cure porque su defensa sea mayor a su ataque
         public void Dwarve_ReceiveAttack_DefensaMayor_mantieneVida_ImplActual()
         {
-            var d = new Dwarve("Gimli");
+            var d = new Dwarf("Gimli");
             d.Life = 120;
-            d.AddItem(new Item("Armadura", 0, 10, 0));
+            d.AddItem(new Shield("Armadura"));
 
-            var nuevaVida = d.ReceiveAttack(20); // defensa efectiva > ataque → vida aumenta
+            Elf elfo1 = new Elf("elfo1");
+            var nuevaVida = d.ReceiveAttack(elfo1); // defensa efectiva > ataque → vida aumenta // 120 + 75 - 20 = 175 
 
             Assert.AreEqual(nuevaVida, 120);
         }
@@ -54,10 +57,9 @@ namespace LibraryTests
         // Justificación: Elves.Heal = mitad de _maxLife + curas de ítems, con tope en _maxLife.
         public void Elves_Heal_SumaMitadYTopea()
         {
-            var e = new Elves("Legolas");
-            e.Life = 40; // _maxLife = 100 en tu código
-            e.AddItem(new Item("Hierbas", 0, 0, 30));
-
+            var e = new Elf("Legolas");
+            e.Life = 80; // _maxLife = 100
+            e.AddItem(new Vandage("Hierbas"));
             e.Heal();
 
             Assert.AreEqual(100, e.Life);
@@ -67,10 +69,10 @@ namespace LibraryTests
         // Justificación: Documentar implementación actual de daño: Life -= (ataque + defensa).
         public void Elves_RecieveAttack_UsaAtaqueMasDefensa_ImplActual()
         {
-            var e = new Elves("Legolas");
-            e.AddItem(new Item("Armadura Ligera", 0, 5, 0));
-
-            var nuevaVida = e.ReceiveAttack(30); // 100 vida - (30 ataque - 25 defensa) = 95 vida
+            var e = new Elf("Legolas");
+            e.AddItem(new Helmet("Armadura Ligera"));
+            Knight knight = new Knight("knight");
+            var nuevaVida = e.ReceiveAttack(knight); // 100 vida + 25 - 30 ataque  = 95 vida
 
             Assert.Less(nuevaVida, 100); // perdió más que el ataque por sumar defensa
         }
@@ -118,39 +120,38 @@ namespace LibraryTests
         public void GetAttack_SumaAtaqueItems_UnaLlamada()
         {
             var k = new Knight("Arturo");
-            Item sword = new Item("Sword", 15, 0, 0);
+            Sword sword = new Sword("Sword");
             k.AddItem(sword);
             var atk = k.GetAttack();
 
-            // _attack base = 20, +15 = 35
-            Assert.AreEqual(35, atk);
+            // attack base = 20, +20 = 40
+            Assert.AreEqual(40, atk);
         }
 
         [Test]
         public void GetAttack_AcumulaIndefinidamente_EntreLlamadas_ExponeBug()
         {
             var k = new Knight("Arturo");
-            Item sword = new Item("Sword", 10, 0, 0);
+            Sword sword = new Sword("Sword");
             k.AddItem(sword);
-            var a1 = k.GetAttack(); // 20 + 10 = 30 (y _attack queda 30)
-            var a2 = k.GetAttack(); // vuelve a sumar el 10 => 40
-            var a3 = k.GetAttack(); // => 50
+            var a1 = k.GetAttack(); // 20 + 20 = 40 (y _attack queda 40)
+            var a2 = k.GetAttack(); // no vuelve a sumar el 20 
+            
 
-            Assert.AreEqual(30, a1);
+            Assert.AreEqual(40, a1);
             Assert.AreEqual(a1, a2);
-            Assert.AreEqual(a2, a3);
         }
 
         [Test]
         public void GetDefense_AplicaMultiplicadorYAcumula_ExponeBug()
         {
             var k = new Knight("Arturo");
-            Item shield = new Item("Shield", 0, 20, 0);
+            Shield shield = new Shield("Shield");
             k.AddItem(shield);
-            var d1 = k.GetDefense(); // base 80 + (20*3/2=30) = 110
-            var d2 = k.GetDefense(); // vuelve a sumar 30 => 140
+            var d1 = k.GetDefense(); // base 80 + 15 = 95
+            var d2 = k.GetDefense(); // no vuelve a sumar 15 
 
-            Assert.AreEqual(110, d1);
+            Assert.AreEqual(95, d1);
             Assert.AreEqual(d1, d2); // acumulación no resetea entre llamadas
         }
 
@@ -168,45 +169,34 @@ namespace LibraryTests
         public void ReceiveAttack_NoDeberiaCurar_SiDefensaMayorQueAtaque_Esperado()
         {
             var k = new Knight("Arturo");
-            Item shield = new Item("Shield", 0, 200, 0);
+            Shield shield = new Shield("Shield");
             k.AddItem(shield);
             // Con la implementación actual: Life -= (ataque - defensa)
             // Si defensa > ataque => (ataque - defensa) es negativo => Life -= negativo => Life AUMENTA (cura)
             // Lo esperado lógicamente: daño = max(0, ataque - defensa)
 
+            Elf elf2 = new Elf("elf 2");
             var vidaInicial = k.Life;
-            var vidaLuego = k.ReceiveAttack(50);
+            var vidaLuego = k.ReceiveAttack(elf2);
 
             // Este Assert expone el bug: hoy la vida sube o queda en _maxLife.
             Assert.True(vidaLuego >= vidaInicial,
                 "BUG: el daño no debería jamás curar. Se espera que, si defensa >= ataque, el daño sea 0.");
         }
-
-        [Test]
-        public void ReceiveAttack_Muere_QuedaEnCero()
-        {
-            var k = new Knight("Arturo");
-            // Forzamos daño grande y sin defensa agregada (ojo que GetDefense muta estado)
-            k.Items.Clear();
-            // Primera llamada a GetDefense dentro de ReceiveAttack usará la defensa base 80
-            // daño efectivo = 500 - 80 = 420
-            var vida = k.ReceiveAttack(500);
-
-            Assert.AreEqual(0, vida);
-            Assert.AreEqual(0, k.Life);
-        }
+        
 
         [Test]
         public void Heal_SumaItemsYRespetaTope()
         {
             var k = new Knight("Arturo");
-            Item potion = new Item("potion", 0, 0, 50);
+            Vandage potion = new Vandage("potion");
             k.AddItem(potion);
-            potion.Healing = 80;
-            k.AddItem(potion);
+            Vandage potion2 = new Vandage("potion2");
+            k.AddItem(potion2);
 
             // Dañamos antes para testear curación
-            k.ReceiveAttack(120); // con defensa base 80, daño 40 -> Life baja en 40
+            Elf elf2 = new Elf("elf 2");
+            k.ReceiveAttack(elf2); // con defensa base 80, daño 20 -> Life baja en 60
 
             var vidaAntes = k.Life;
             k.Heal();

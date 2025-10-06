@@ -9,7 +9,7 @@ public class Shield : IDefenseItem
     {
         get
         {
-            return 14;
+            return 15;
         }
     }
 

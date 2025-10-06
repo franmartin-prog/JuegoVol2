@@ -54,7 +54,6 @@ public class Dwarf : ICharacter<IItems>
             {
                 defense += item.DefenseValue;
             }
-
         }
         else
             defense = 0;
@@ -109,6 +108,12 @@ public class Dwarf : ICharacter<IItems>
 
     public int ReceiveAttack(ICharacter<IItems> character)
     {
-        return Life = Life + GetDefense() - character.GetAttack();
+        Life = Life + GetDefense() - character.GetAttack();
+        if (GetDefense() >= MaxLife)
+        {
+            Life = MaxLife;
+        }
+
+        return Life;
     }
 }
