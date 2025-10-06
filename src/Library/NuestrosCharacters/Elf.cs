@@ -3,18 +3,24 @@ namespace Library.NuestrosCharacters;
 public class Elf : ICharacter<IItems> 
 {
     public string Name { get; }
-    public int MaxLife { get; }
-    public int InitialAttack { get; }
-    public int InitialDefense { get; }
+    public int MaxLife
+    {
+        get { return 100; }
+    }
+    public int InitialAttack
+    {
+        get { return 20; }
+    }
+    public int InitialDefense
+    {
+        get { return 25; }
+    }
     public int Life { get; set; }
 
-    public Elf(string name, int maxLife, int initialAttack, int initialDefense)
+    public Elf(string name)
     {
         Name = name;
-        MaxLife = maxLife;
-        InitialAttack = initialAttack;
-        InitialDefense = initialDefense;
-        Life = maxLife;
+        Life = MaxLife;
     }
 
     //ATAQUE
@@ -58,6 +64,7 @@ public class Elf : ICharacter<IItems>
     {
         if (Life > 0)
         {
+            Life += MaxLife / 2;
             foreach (var item in HealingItems)
             {
                 Life += item.HealingValue;
