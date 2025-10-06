@@ -3,7 +3,6 @@ namespace Library;
 public interface IMagicCharacter : ICharacter<IItems>
 {
     int MaxMagic { get;  }
+    int Magic { get; set; }
     
-    void AddMagicItem(IMagicItem item);
-    void RemoveMagicItem(IMagicItem item);
 }

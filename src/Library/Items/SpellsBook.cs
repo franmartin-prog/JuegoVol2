@@ -2,8 +2,10 @@ using Library;
 
 namespace Ucu.Poo.RoleplayGame;
 
-public class SpellsBook : IItems
+public class SpellsBook : IMagicItem
 {
+    public string Name { get; }
+    public int MagicCost { get; }
     public Spell[] Spells { get; set; }
     
     public int AttackValue
@@ -32,5 +34,10 @@ public class SpellsBook : IItems
         }
     }
 
-    public string Name { get; }
+    public SpellsBook(string name, int magicCost, Spell[] spells)
+    {
+        Name = name;
+        MagicCost = magicCost;
+        Spells = spells;
+    }
 }

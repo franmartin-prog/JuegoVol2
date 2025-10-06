@@ -1,7 +1,10 @@
+using Library;
+
 namespace Ucu.Poo.RoleplayGame;
 
-public class Staff
+public class Staff : IDefenseItem, IAttackItem
 {
+    public string Name { get; }
     public int AttackValue 
     {
         get
@@ -16,5 +19,10 @@ public class Staff
         {
             return 100;
         }
+    }
+
+    public Staff(string name)
+    {
+        Name = name;
     }
 }

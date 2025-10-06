@@ -1,20 +1,21 @@
+using Library;
+
 namespace Ucu.Poo.RoleplayGame;
 
-public class Spell
+public class Spell : ISpells
 {
-    public int AttackValue
-    {
-        get
-        {
-            return 70;
-        }
-    }
+    public string Name { get; }
+    public int Cost { get; }
 
-    public int DefenseValue
+    public Spell(string name, int cost, int attackValue, int defenseValue)
     {
-        get
-        {
-            return 70;
-        }
+        Name = name;
+        Cost = cost;
+        DefenseValue = defenseValue;
+        AttackValue = attackValue;
     }
+    public int AttackValue { get; }
+
+    public int DefenseValue { get; }
 }
+

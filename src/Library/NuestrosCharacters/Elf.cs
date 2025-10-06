@@ -1,6 +1,6 @@
 namespace Library.NuestrosCharacters;
 
-public class Wizardd : IMagicCharacter
+public class Elf : ICharacter<IItems> 
 {
     public string Name { get; }
     public int MaxLife { get; }
@@ -8,15 +8,13 @@ public class Wizardd : IMagicCharacter
     public int InitialDefense { get; }
     public int Life { get; set; }
 
-    public Wizardd(string name, int maxLife, int initialAttack, int initialDefense, int maxMagic)
+    public Elf(string name, int maxLife, int initialAttack, int initialDefense)
     {
         Name = name;
         MaxLife = maxLife;
         InitialAttack = initialAttack;
         InitialDefense = initialDefense;
         Life = maxLife;
-        MaxMagic = maxMagic;
-        Magic = MaxMagic;
     }
 
     //ATAQUE
@@ -104,8 +102,4 @@ public class Wizardd : IMagicCharacter
     {
         return Life = Life + GetDefense() - character.GetAttack();
     }
-
-    public int MaxMagic { get; }
-    public int Magic { get; set; }
-    
 }

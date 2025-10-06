@@ -1,12 +1,20 @@
+using Library;
+
 namespace Ucu.Poo.RoleplayGame;
 
-public class Sword
+public class Sword : IAttackItem, IItems
 {
-    public int AttackValue 
+    public string Name { get; }
+    public int AttackValue
     {
         get
         {
             return 20;
         } 
+    }
+
+    public Sword(string name)
+    {
+        Name = name;
     }
 }

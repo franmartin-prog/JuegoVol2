@@ -2,5 +2,5 @@
 
 public interface IAttackItem : IItems
 {
-    int Attack { get; }
+    int AttackValue { get; }
 }
